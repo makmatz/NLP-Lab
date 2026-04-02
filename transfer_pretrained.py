@@ -23,8 +23,8 @@ LABELS_MAPPING = {
         'NEGATIVE': 'negative',
     },
     'aychang/roberta-base-imdb': {
-        'POSITIVE': 'positive',
-        'NEGATIVE': 'negative',
+        'pos': 'positive',
+        'neg': 'negative',
     },
     # --- Semeval2017A models (3-class: positive / neutral / negative) ---
     'cardiffnlp/twitter-roberta-base-sentiment': {
@@ -38,14 +38,14 @@ LABELS_MAPPING = {
         'neg': 'negative',
     },
     'cardiffnlp/twitter-roberta-base-sentiment-latest': {
-        'negative': 'negative',
-        'neutral': 'neutral',
-        'positive': 'positive',
+        'Negative': 'negative',
+        'Neutral': 'neutral',
+        'Positive': 'positive',
     },
     'cardiffnlp/twitter-xlm-roberta-base-sentiment': {
-        'negative': 'negative',
-        'neutral': 'neutral',
-        'positive': 'positive',
+        'Positive': 'positive',
+        'Neutral': 'neutral',
+        'Negative': 'negative',
     },
     'Seethal/sentiment_analysis_generic_dataset': {
         'LABEL_0': 'negative',
@@ -73,6 +73,8 @@ DATASET_MODELS = {
 
 
 if __name__ == '__main__':
+    results_file = open('pretrained_results.txt', 'w')
+
     for DATASET, models in DATASET_MODELS.items():
         if DATASET == "Semeval2017A":
             X_train, y_train, X_test, y_test = load_Semeval2017A()
@@ -95,4 +97,17 @@ if __name__ == '__main__':
                 y_pred.append(LABELS_MAPPING[PRETRAINED_MODEL][label])
 
             y_pred_enc = le.transform(y_pred)
-            print(f'\nDataset: {DATASET}\nPre-Trained model: {PRETRAINED_MODEL}\nTest set evaluation\n{get_metrics_report([y_test_enc], [y_pred_enc])}')
+            report = get_metrics_report([y_test_enc], [y_pred_enc])
+
+            entry = (
+                f'{"=" * 60}\n'
+                f'Dataset:  {DATASET}\n'
+                f'Model:    {PRETRAINED_MODEL}\n'
+                f'{"=" * 60}\n'
+                f'{report}\n'
+            )
+            results_file.write(entry)
+            results_file.flush()
+
+    results_file.close()
+    print('\nResults saved to pretrained_results.txt')
