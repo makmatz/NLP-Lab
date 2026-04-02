@@ -33,9 +33,9 @@ LABELS_MAPPING = {
         'LABEL_2': 'positive',
     },
     'finiteautomata/bertweet-base-sentiment-analysis': {
-        'POS': 'positive',
-        'NEU': 'neutral',
-        'NEG': 'negative',
+        'pos': 'positive',
+        'neu': 'neutral',
+        'neg': 'negative',
     },
     'cardiffnlp/twitter-roberta-base-sentiment-latest': {
         'negative': 'negative',
