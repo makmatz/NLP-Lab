@@ -15,7 +15,10 @@ def progress(loss, epoch, batch, batch_size, dataset_size):
     bar_len = 40
     filled_len = int(round(bar_len * count / float(dataset_size)))
 
-    bar = '=' * filled_len + '-' * (bar_len - filled_len)
+    if batch >= batches:
+        bar = '=' * bar_len
+    else:
+        bar = '=' * filled_len + '-' * (bar_len - filled_len)
 
     status = 'Epoch {}, Loss: {:.4f}'.format(epoch, loss)
     _progress_str = "\r \r [{}] ...{}".format(bar, status)
@@ -73,7 +76,7 @@ def train_dataset(_epoch, dataloader, model, loss_function, optimizer):
                  epoch=_epoch,
                  batch=index,
                  batch_size=dataloader.batch_size,
-                 dataset_size=len(dataloader.dataset))
+                 dataset_size=len(dataloader) * dataloader.batch_size)
 
     return running_loss / index
 
