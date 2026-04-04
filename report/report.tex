@@ -31,6 +31,26 @@
   language=Python
 }
 
+\lstdefinestyle{cleanoutput}{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{blue!4},
+  frame=tb,
+  framerule=0.8pt,
+  rulecolor=\color{blue!30},
+  numbers=none,
+  breaklines=false,
+  keepspaces=true,
+  showstringspaces=false,
+  aboveskip=6pt,
+  belowskip=6pt,
+  xleftmargin=6pt,
+  xrightmargin=6pt,
+  stringstyle=\color{teal!80!black},
+  keywordstyle=\color{blue!70!black},
+  commentstyle=\color{gray!80},
+  language=Python,
+}
+
 \hypersetup{
   colorlinks=true,
   linkcolor=blue,
@@ -108,28 +128,55 @@
 Τα επεξεργασμένα παραδείγματα αποθηκεύονται στη μεταβλητή \textlatin{self.data} της κλάσης, ώστε να είναι διαθέσιμα στα επόμενα στάδια της 
 προεπεξεργασίας.
 
-Τα πρώτα 10 \textlatin{tokenized} παραδείγματα του \textlatin{training set} φαίνονται στον παρακάτω πίνακα.
+Τα πρώτα 10 \textlatin{tokenized} παραδείγματα του \textlatin{training set} φαίνονται παρακάτω.
 
-\begin{table}[H]
-  \centering
-  \caption{Έξοδος Ζητούμενου 2 (\textlatin{dataloading.py:EX2})}
-  \begin{tabular}{cp{0.8\textwidth}}
-    \toprule
-    \textbf{\#} & \textbf{\textlatin{Tokenized example}} \\
-    \midrule
-    0 & \textlatin{the rock is destined to be the 21st century's new " conan " and that he's going to make a splash even greater than arnold schwarzenegger , jean-claud van damme or steven segal .} \\
-    1 & \textlatin{the gorgeously elaborate continuation of " the lord of the rings " trilogy is so huge that a column of words cannot adequately describe co-writer/director peter jackson's expanded vision of j . r . r . tolkien's middle-earth .} \\
-    2 & \textlatin{effective but too-tepid biopic} \\
-    3 & \textlatin{if you sometimes like to go to the movies to have fun , wasabi is a good place to start .} \\
-    4 & \textlatin{emerges as something rare , an issue movie that's so honest and keenly observed that it doesn't feel like one .} \\
-    5 & \textlatin{the film provides some great insight into the neurotic mindset of all comics -- even those who have reached the absolute top of the game .} \\
-    6 & \textlatin{offers that rare combination of entertainment and education .} \\
-    7 & \textlatin{perhaps no picture ever made has more literally showed that the road to hell is paved with good intentions .} \\
-    8 & \textlatin{steers turns in a snappy screenplay that curls at the edges ; it's so clever you want to hate it . but he somehow pulls it off .} \\
-    9 & \textlatin{take care of my cat offers a refreshingly different slice of asian cinema .} \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+\selectlanguage{english}
+\begin{verbatim}
+[0] tokens = ['the', 'rock', 'is', 'destined', 'to', 'be', 'the', '21st',
+              "century's", 'new', '"', 'conan', '"', 'and', 'that', "he's",
+              'going', 'to', 'make', 'a', 'splash', 'even', 'greater', 'than',
+              'arnold', 'schwarzenegger', ',', 'jean-claud', 'van', 'damme',
+              'or', 'steven', 'segal', '.']
+
+[1] tokens = ['the', 'gorgeously', 'elaborate', 'continuation', 'of', '"',
+              'the', 'lord', 'of', 'the', 'rings', '"', 'trilogy', 'is', 'so',
+              'huge', 'that', 'a', 'column', 'of', 'words', 'cannot', 'adequately',
+              'describe', 'co-writer/director', 'peter', "jackson's", 'expanded',
+              'vision', 'of', 'j', '.', 'r', '.', 'r', '.', "tolkien's",
+              'middle-earth', '.']
+
+[2] tokens = ['effective', 'but', 'too-tepid', 'biopic']
+
+[3] tokens = ['if', 'you', 'sometimes', 'like', 'to', 'go', 'to', 'the',
+              'movies', 'to', 'have', 'fun', ',', 'wasabi', 'is', 'a', 'good',
+              'place', 'to', 'start', '.']
+
+[4] tokens = ['emerges', 'as', 'something', 'rare', ',', 'an', 'issue',
+              'movie', "that's", 'so', 'honest', 'and', 'keenly', 'observed',
+              'that', 'it', "doesn't", 'feel', 'like', 'one', '.']
+
+[5] tokens = ['the', 'film', 'provides', 'some', 'great', 'insight', 'into',
+              'the', 'neurotic', 'mindset', 'of', 'all', 'comics', '--', 'even',
+              'those', 'who', 'have', 'reached', 'the', 'absolute', 'top', 'of',
+              'the', 'game', '.']
+
+[6] tokens = ['offers', 'that', 'rare', 'combination', 'of', 'entertainment',
+              'and', 'education', '.']
+
+[7] tokens = ['perhaps', 'no', 'picture', 'ever', 'made', 'has', 'more',
+              'literally', 'showed', 'that', 'the', 'road', 'to', 'hell', 'is',
+              'paved', 'with', 'good', 'intentions', '.']
+
+[8] tokens = ['steers', 'turns', 'in', 'a', 'snappy', 'screenplay', 'that',
+              'curls', 'at', 'the', 'edges', ';', "it's", 'so', 'clever', 'you',
+              'want', 'to', 'hate', 'it', '.', 'but', 'he', 'somehow', 'pulls',
+              'it', 'off', '.']
+
+[9] tokens=['take', 'care', 'of', 'my', 'cat', 'offers', 'a',
+            'refreshingly', 'different', 'slice', 'of', 'asian',
+            'cinema', '.']
+\end{verbatim}
+\selectlanguage{greek}
 
 \phantomsection
 \subsection*{Ζητούμενο 3 -- Κωδικοποίηση Παραδειγμάτων (Λέξεων)}
@@ -138,9 +185,57 @@
 % Υλοποίηση __getitem__ της κλάσης SentenceDataset (dataloading.py:EX3)
 % Εκτυπώστε 5 παραδείγματα στην αρχική τους μορφή και όπως τα επιστρέφει η κλάση.
 
-\begin{lstlisting}[caption={Έξοδος Ζητούμενου 3 (dataloading.py:EX3)}]
-% TODO: Επικολλήστε εδώ τα 5 παραδείγματα όπως τα επιστρέφει η SentenceDataset
-\end{lstlisting}
+\selectlanguage{english}
+\begin{verbatim}
+Original : the rock is destined to be the 21st century's new " conan " and
+           that he's going to make a splash even greater than arnold
+           schwarzenegger , jean-claud van damme or steven segal .
+
+Encoded  : [     1,   1138,     15,  10454,      5,     31,      1,
+              5034, 400001,     51,      9,  18513,      9,      6,
+                13, 400001,    223,      5,    160,      8,  16807,
+               152,   1414,     74,   5819,   6681,      2, 400001,
+              1462,  43708,     47,   4412,  26985,      3,      0]
+
+Original : the gorgeously elaborate continuation of " the lord of the rings "
+           trilogy is so huge that a column of words cannot adequately
+           describe co-writer/director peter jackson's expanded vision of
+           j . r . r . tolkien's middle-earth .
+
+Encoded  : [     1,  78616,   5135,  10117,      4,      9,      1,
+              2371,      4,      1,   6820,      9,  12305,     15,
+               101,   1325,     13,      8,   3236,      4,   1375,
+              1120,  12424,   4467, 400001,   1295, 400001,   2853,
+              3139,      4,   6892,      3,   1912,      3,   1912]
+
+Original : effective but too-tepid biopic
+
+Encoded  : [   2038,     35, 400001,  34277,      0,      0,      0,
+                  0,      0,      0,      0,      0,      0,      0,
+                  0,      0,      0,      0,      0,      0,      0,
+                  0,      0,      0,      0,      0,      0,      0,
+                  0,      0,      0,      0,      0,      0,      0]
+
+Original : if you sometimes like to go to the movies to have fun , wasabi
+           is a good place to start .
+
+Encoded  : [    84,     82,   1072,    118,      5,    243,      5,
+                 1,   2460,      5,     34,   2906,      2,  66408,
+                15,      8,    220,    242,      5,    466,      3,
+                 0,      0,      0,      0,      0,      0,      0,
+                 0,      0,      0,      0,      0,      0,      0]
+
+Original : emerges as something rare , an issue movie that's so honest and
+           keenly observed that it doesn't feel like one .
+
+Encoded  : [ 12398,     20,    646,   2349,      2,     30,    496,
+              1006, 400001,    101,   6082,      6,  23499,   4583,
+                13,     21, 400001,    999,    118,     49,      3,
+                 0,      0,      0,      0,      0,      0,      0,
+                 0,      0,      0,      0,      0,      0,      0]
+
+\end{verbatim}
+\selectlanguage{greek}
 
 \phantomsection
 \subsection*{Ζητούμενο 4 -- \textlatin{Embedding Layer}}
@@ -227,8 +322,9 @@
 
 % Συμπληρώστε τα κενά στις θέσεις training.py:EX9.
 
-\begin{lstlisting}[caption={Σύνοψη εκπαίδευσης}]
 % TODO: Επικολλήστε σύνοψη εκπαίδευσης (π.χ. loss ανά εποχή)
+\begin{lstlisting}[caption={Σύνοψη εκπαίδευσης}]
+
 \end{lstlisting}
 
 \phantomsection
