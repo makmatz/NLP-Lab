@@ -6,8 +6,8 @@ from sklearn.preprocessing import LabelEncoder
 from utils.load_datasets import load_MR, load_Semeval2017A
 
 
-DATASET = 'MR'  # 'MR' or 'Semeval2017A'
-PRETRAINED_MODEL = 'bert-base-cased'
+DATASETS = ['MR', 'Semeval2017A']
+PRETRAINED_MODELS = ['bert-base-cased', 'roberta-base', 'distilbert-base-uncased']
 
 
 metric = evaluate.load("accuracy")
@@ -34,57 +34,68 @@ def prepare_dataset(X, y):
 
 if __name__ == '__main__':
 
-    # load the raw data
-    if DATASET == "Semeval2017A":
-        X_train, y_train, X_test, y_test = load_Semeval2017A()
-    elif DATASET == "MR":
-        X_train, y_train, X_test, y_test = load_MR()
-    else:
-        raise ValueError("Invalid dataset")
+    results = {}
 
-    # encode labels
-    le = LabelEncoder()
-    le.fit(list(set(y_train)))
-    y_train = le.transform(y_train)
-    y_test = le.transform(y_test)
-    n_classes = len(list(le.classes_))
+    for DATASET in DATASETS:
+        # load the raw data
+        if DATASET == "Semeval2017A":
+            X_train, y_train, X_test, y_test = load_Semeval2017A()
+        elif DATASET == "MR":
+            X_train, y_train, X_test, y_test = load_MR()
 
-    # prepare datasets
-    train_set = prepare_dataset(X_train, y_train)
-    test_set = prepare_dataset(X_test, y_test)
+        # encode labels
+        le = LabelEncoder()
+        le.fit(list(set(y_train)))
+        y_train = le.transform(y_train)
+        y_test = le.transform(y_test)
+        n_classes = len(list(le.classes_))
 
-    # define model and tokenizer
-    tokenizer = AutoTokenizer.from_pretrained(PRETRAINED_MODEL)
-    model = AutoModelForSequenceClassification.from_pretrained(
-        PRETRAINED_MODEL, num_labels=n_classes)
+        # prepare datasets
+        train_set = prepare_dataset(X_train, y_train)
+        test_set = prepare_dataset(X_test, y_test)
 
-    # tokenize datasets
-    tokenized_train_set = train_set.map(tokenize_function)
-    tokenized_test_set = test_set.map(tokenize_function)
+        for PRETRAINED_MODEL in PRETRAINED_MODELS:
+            print(f"\n=== Dataset: {DATASET} | Model: {PRETRAINED_MODEL} ===")
 
-    # TODO: Main-lab-Q7 - remove this section once you are ready to execute on a GPU
-    #  create a smaller subset of the dataset
-    n_samples = 40
-    small_train_dataset = tokenized_train_set.shuffle(
-        seed=42).select(range(n_samples))
-    small_eval_dataset = tokenized_test_set.shuffle(
-        seed=42).select(range(n_samples))
+            # define model and tokenizer
+            tokenizer = AutoTokenizer.from_pretrained(PRETRAINED_MODEL)
+            model = AutoModelForSequenceClassification.from_pretrained(
+                PRETRAINED_MODEL, num_labels=n_classes)
 
-    # TODO: Main-lab-Q7 - customize hyperparameters once you are ready to execute on a GPU
-    # training setup
-    args = TrainingArguments(
-        output_dir="output",
-        evaluation_strategy="epoch",
-        num_train_epochs=5,
-        per_device_train_batch_size=8
-    )
-    trainer = Trainer(
-        model=model,
-        args=args,
-        train_dataset=small_train_dataset,
-        eval_dataset=small_eval_dataset,
-        compute_metrics=compute_metrics,
-    )
+            # tokenize datasets
+            tokenized_train_set = train_set.map(tokenize_function)
+            tokenized_test_set = test_set.map(tokenize_function)
 
-    # train
-    trained_model = trainer.train()
+            # training setup
+            args = TrainingArguments(
+                output_dir=f"output/{DATASET}/{PRETRAINED_MODEL}",
+                evaluation_strategy="epoch",
+                num_train_epochs=3,
+                per_device_train_batch_size=16,
+                per_device_eval_batch_size=32,
+                learning_rate=2e-5,
+                weight_decay=0.01,
+                warmup_ratio=0.1,
+                load_best_model_at_end=True,
+                metric_for_best_model="accuracy",
+            )
+            trainer = Trainer(
+                model=model,
+                args=args,
+                train_dataset=tokenized_train_set,
+                eval_dataset=tokenized_test_set,
+                compute_metrics=compute_metrics,
+            )
+
+            # train and evaluate
+            trainer.train()
+            eval_results = trainer.evaluate()
+            results[(DATASET, PRETRAINED_MODEL)] = eval_results
+            print(f"Results: {eval_results}")
+
+    # print summary table
+    print("\n=== RESULTS SUMMARY ===")
+    print(f"{'Dataset':<15} {'Model':<30} {'Accuracy':>10}")
+    print("-" * 57)
+    for (dataset, model_name), res in results.items():
+        print(f"{dataset:<15} {model_name:<30} {res['eval_accuracy']:>10.4f}")
