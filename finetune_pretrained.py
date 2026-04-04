@@ -70,8 +70,8 @@ if __name__ == '__main__':
             args = TrainingArguments(
                 output_dir="output",
                 eval_strategy="epoch",
-                num_train_epochs=5,
-                per_device_train_batch_size=8
+                num_train_epochs=3,
+                per_device_train_batch_size=32
             )
             trainer = Trainer(
                 model=model,

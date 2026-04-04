@@ -119,8 +119,8 @@
 \end{table}
 
 \phantomsection
-\subsection*{Ζητούμενο 2 -- Λεκτική Ανάλυση (\textlatin{Tokenization})}
-\addcontentsline{toc}{subsection}{Ζητούμενο 2 -- Λεκτική Ανάλυση (Tokenization)}
+\subsection*{Ζητούμενο 2 -- Λεκτική Ανάλυση (\foreignlanguage{english}{Tokenization})}
+\addcontentsline{toc}{subsection}{Ζητούμενο 2 -- Λεκτική Ανάλυση (\textlatin{Tokenization})}
 
 Για τη λεκτική ανάλυση χρησιμοποιήσαμε την κλάση \textlatin{SentenceDataset} στο αρχείο \textlatin{dataloading.py}. 
 Στην αρχικοποίηση του \textlatin{Dataset}, κάθε πρόταση του \textlatin{MR} μετατρέπεται σε ακολουθία από \textlatin{tokens} με χρήση 
@@ -239,10 +239,12 @@ Encoded  : [ 12398,     20,    646,   2349,      2,     30,    496,
 
 \phantomsection
 \subsection*{Ζητούμενο 4 -- \textlatin{Embedding Layer}}
-\addcontentsline{toc}{subsection}{Ζητούμενο 4 -- Embedding Layer}
+\addcontentsline{toc}{subsection}{Ζητούμενο 4 -- \textlatin{Embedding Layer}}
 
 % Συμπληρώστε τα κενά στις θέσεις models.py:EX4
 % Απαντήστε στα παρακάτω ερωτήματα:
+
+Ορίσαμε \textlatin{self.embedding = nn.Embedding.from\_pretrained(torch.FloatTensor(embeddings))} για αρχικοποίηση από τα προ-εκπαιδευμένα διανύσματα και θέσαμε \textlatin{self.embedding.weight.requires\_grad = trainable\_emb} για έλεγχο \textlatin{fine-tuning}.
 
 \paragraph{Γιατί αρχικοποιούμε το \textlatin{embedding layer} με τα προ-εκπαιδευμένα \textlatin{word embeddings};}
 
@@ -254,10 +256,12 @@ Encoded  : [ 12398,     20,    646,   2349,      2,     30,    496,
 
 \phantomsection
 \subsection*{Ζητούμενο 5 -- \textlatin{Output Layer(s)}}
-\addcontentsline{toc}{subsection}{Ζητούμενο 5 -- Output Layer(s)}
+\addcontentsline{toc}{subsection}{Ζητούμενο 5 -- \textlatin{Output Layer(s)}}
 
 % Συμπληρώστε τα κενά στις θέσεις models.py:EX5
 % Απαντήστε στα παρακάτω ερωτήματα:
+
+Ορίσαμε \textlatin{self.linear = nn.Linear(dim, hidden\_size)} και \textlatin{self.relu = nn.ReLU()} ως μη γραμμικό μετασχηματισμό, και \textlatin{self.output = nn.Linear(hidden\_size, output\_size)} ως τελικό \textlatin{layer} ταξινόμησης.
 
 \paragraph{Γιατί βάζουμε μη γραμμική συνάρτηση ενεργοποίησης στο προτελευταίο \textlatin{layer};}
 
@@ -269,10 +273,14 @@ Encoded  : [ 12398,     20,    646,   2349,      2,     30,    496,
 
 \phantomsection
 \subsection*{Ζητούμενο 6 -- \textlatin{Forward Pass}}
-\addcontentsline{toc}{subsection}{Ζητούμενο 6 -- Forward Pass}
+\addcontentsline{toc}{subsection}{Ζητούμενο 6 -- \textlatin{Forward Pass}}
 
 % Συμπληρώστε τα κενά στις θέσεις models.py:EX6 στη μέθοδο __forward__
 % Απαντήστε στα παρακάτω ερωτήματα:
+
+Στο \textlatin{forward}: (1) \textlatin{embeddings = self.embedding(x)}, (2) αναπαράσταση πρότασης με \textlatin{mean pooling}
+(\textlatin{embeddings.sum(dim=1) / lengths}) ή \textlatin{mean+max} με \textlatin{torch.cat},
+(3) \textlatin{self.relu(self.linear(representations))}, (4) \textlatin{logits = self.output(representations)}.
 
 \paragraph{Διαισθητική ερμηνεία της αναπαράστασης κέντρο-βάρους:}
 
@@ -284,10 +292,12 @@ Encoded  : [ 12398,     20,    646,   2349,      2,     30,    496,
 
 \phantomsection
 \subsection*{Ζητούμενο 7 -- \textlatin{DataLoaders}}
-\addcontentsline{toc}{subsection}{Ζητούμενο 7 -- DataLoaders}
+\addcontentsline{toc}{subsection}{Ζητούμενο 7 -- \textlatin{DataLoaders}}
 
 % Συμπληρώστε τα κενά στις θέσεις main.py:EX7
 % Απαντήστε στα παρακάτω ερωτήματα:
+
+Ορίσαμε \textlatin{train\_loader = DataLoader(train\_set, batch\_size=BATCH\_SIZE, shuffle=True)} και \textlatin{test\_loader = DataLoader(test\_set, batch\_size=BATCH\_SIZE, shuffle=False)}.
 
 \paragraph{Συνέπειες μικρών και μεγάλων \textlatin{mini-batches} στην εκπαίδευση:}
 
@@ -304,16 +314,16 @@ Encoded  : [ 12398,     20,    646,   2349,      2,     30,    496,
 % Συμπληρώστε τα κενά στις θέσεις main.py:EX8
 % Αναφέρετε τις επιλογές σας (κριτήριο, παράμετροι, optimizer) και αιτιολογήστε.
 
-\paragraph{Κριτήριο (\textlatin{Loss}):} % TODO: BCEWithLogitsLoss / CrossEntropyLoss -- γιατί;
+\paragraph{Κριτήριο (\textlatin{Loss}):} \textlatin{BCEWithLogitsLoss} για δυαδική ταξινόμηση (\textlatin{MR}, 2 κλάσεις) και \textlatin{CrossEntropyLoss} για πολυκλασική (\textlatin{Semeval2017A}, 3 κλάσεις).
 
-\paragraph{\textlatin{Optimizer}:} % TODO: Adam / Adagrad / RMSProp -- γιατί;
+\paragraph{\textlatin{Optimizer}:} \textlatin{Adam} με \textlatin{lr=1e-3}, χρησιμοποιώντας μόνο τις παραμέτρους με \textlatin{requires\_grad=True} (\textlatin{filter(lambda p: p.requires\_grad, model.parameters())}).
 
 \paragraph{Υπερπαράμετροι:}
 \begin{itemize}
-  \item \textlatin{Learning rate}: % TODO
-  \item \textlatin{Batch size}: % TODO
-  \item Εποχές: % TODO
-  \item Άλλες: % TODO
+  \item \textlatin{Learning rate}: $10^{-3}$
+  \item \textlatin{Batch size}: 64
+  \item Εποχές: έως 50 (με \textlatin{early stopping}, \textlatin{patience}=5)
+  \item Άλλες: \textlatin{hidden size}=100
 \end{itemize}
 
 \phantomsection
@@ -322,6 +332,9 @@ Encoded  : [ 12398,     20,    646,   2349,      2,     30,    496,
 
 % Συμπληρώστε τα κενά στις θέσεις training.py:EX9.
 
+Στην \textlatin{train\_dataset}: μεταφορά \textlatin{inputs/labels/lengths} στη συσκευή, \textlatin{optimizer.zero\_grad()}, \textlatin{pred = model(inputs, lengths)}, υπολογισμός \textlatin{loss} (με \textlatin{squeeze} για δυαδική), \textlatin{loss.backward()}, \textlatin{optimizer.step()}.
+Στην \textlatin{eval\_dataset}: ίδια ροή χωρίς \textlatin{backward}, πρόβλεψη με \textlatin{argmax} (πολυκλασική) ή κατώφλι στο 0 (δυαδική), συλλογή \textlatin{y\_pred} και \textlatin{y}.
+
 % TODO: Επικολλήστε σύνοψη εκπαίδευσης (π.χ. loss ανά εποχή)
 \begin{lstlisting}[caption={Σύνοψη εκπαίδευσης}]
 
@@ -329,7 +342,7 @@ Encoded  : [ 12398,     20,    646,   2349,      2,     30,    496,
 
 \phantomsection
 \subsection*{Ζητούμενο 10 -- Αξιολόγηση \textlatin{Baseline} Μοντέλου}
-\addcontentsline{toc}{subsection}{Ζητούμενο 10 -- Αξιολόγηση Baseline Μοντέλου}
+\addcontentsline{toc}{subsection}{Ζητούμενο 10 -- Αξιολόγηση \textlatin{Baseline} Μοντέλου}
 
 % Για κάθε ένα από τα 2 datasets, αναφέρετε accuracy, F1-score (macro), recall (macro).
 % Δημιουργήστε γραφικές παραστάσεις training/test loss ανά εποχή.
@@ -355,7 +368,7 @@ Encoded  : [ 12398,     20,    646,   2349,      2,     30,    496,
 
 \phantomsection
 \subsection*{Ζητούμενο 11 -- Κατηγοριοποίηση με Χρήση \textlatin{LLM}}
-\addcontentsline{toc}{subsection}{Ζητούμενο 11 -- Κατηγοριοποίηση με Χρήση LLM}
+\addcontentsline{toc}{subsection}{Ζητούμενο 11 -- Κατηγοριοποίηση με Χρήση \textlatin{LLM}}
 
 % Επιλέξτε τουλάχιστον 20 κείμενα από κάθε κατηγορία και χρησιμοποιήστε το ChatGPT.
 
@@ -394,11 +407,13 @@ Encoded  : [ 12398,     20,    646,   2349,      2,     30,    496,
 
 \phantomsection
 \subsection*{Ερώτημα 1 -- \textlatin{Mean + Max Pooling}}
-\addcontentsline{toc}{subsection}{Ερώτημα 1 -- Mean + Max Pooling}
+\addcontentsline{toc}{subsection}{Ερώτημα 1 -- \textlatin{Mean + Max Pooling}}
 
 \paragraph{1.1 Υλοποίηση:}
 
 % Υπολογισμός αναπαράστασης u = [mean(E) || max(E)]
+
+Στο \textlatin{BaselineDNN} με \textlatin{pooling='mean\_max'}: \textlatin{mean\_rep = embeddings.sum(dim=1) / lengths.float().unsqueeze(1)}, \textlatin{max\_rep = embeddings.max(dim=1).values}, \textlatin{representations = torch.cat([mean\_rep, max\_rep], dim=1)}. Το \textlatin{dim} του \textlatin{linear layer} διπλασιάστηκε (\textlatin{dim *= 2}).
 
 \paragraph{1.2 Διαφορές από την αρχική αναπαράσταση:}
 
@@ -442,7 +457,7 @@ Encoded  : [ 12398,     20,    646,   2349,      2,     30,    496,
 
 \phantomsection
 \subsection*{Ερώτημα 2 -- \textlatin{LSTM}}
-\addcontentsline{toc}{subsection}{Ερώτημα 2 -- LSTM}
+\addcontentsline{toc}{subsection}{Ερώτημα 2 -- \textlatin{LSTM}}
 
 \paragraph{2.1 \textlatin{Validation set \& Early Stopping}:}
 
@@ -499,7 +514,7 @@ Encoded  : [ 12398,     20,    646,   2349,      2,     30,    496,
 
 \phantomsection
 \subsection*{Ερώτημα 3 -- \textlatin{Self-Attention}}
-\addcontentsline{toc}{subsection}{Ερώτημα 3 -- Self-Attention}
+\addcontentsline{toc}{subsection}{Ερώτημα 3 -- \textlatin{Self-Attention}}
 
 \paragraph{3.1 Υλοποίηση \& Αποτελέσματα (\textlatin{SimpleSelfAttentionModel}):}
 
@@ -574,7 +589,7 @@ q_i = x_i W_Q,\qquad k_i = x_i W_K,\qquad v_i = x_i W_V
 
 \phantomsection
 \subsection*{Ερώτημα 4 -- \textlatin{Multi-Head Attention}}
-\addcontentsline{toc}{subsection}{Ερώτημα 4 -- Multi-Head Attention}
+\addcontentsline{toc}{subsection}{Ερώτημα 4 -- \textlatin{Multi-Head Attention}}
 
 Στο ερώτημα αυτό επεκτείνουμε το απλό \textlatin{self-attention} σε \textlatin{multi-head attention}. Ενώ στο \textlatin{SimpleSelfAttentionModel} 
 υπάρχει μία μόνο κεφαλή προσοχής που υπολογίζει μία ενιαία σταθμισμένη σύνοψη των \textlatin{value vectors}, στο \textlatin{MultiHeadAttentionModel} 
@@ -627,7 +642,7 @@ a_i = \left(\operatorname{head}_i^{(1)} \oplus \operatorname{head}_i^{(2)} \oplu
 
 \phantomsection
 \subsection*{Ερώτημα 5 -- \textlatin{Transformer-Encoder}}
-\addcontentsline{toc}{subsection}{Ερώτημα 5 -- Transformer-Encoder}
+\addcontentsline{toc}{subsection}{Ερώτημα 5 -- \textlatin{Transformer-Encoder}}
 
 % Συμπληρώστε τα κενά στο attention.TransformerEncoderModel
 % Average-pooling για εξαγωγή αναπαράστασης πρότασης
@@ -696,7 +711,7 @@ y = x' + \operatorname{FeedForward}(\operatorname{LayerNorm}(x'))
 
 \phantomsection
 \subsection*{Ερώτημα 6 -- \textlatin{Pre-Trained Transformers (Zero-Shot)}}
-\addcontentsline{toc}{subsection}{Ερώτημα 6 -- Pre-Trained Transformers}
+\addcontentsline{toc}{subsection}{Ερώτημα 6 -- \textlatin{Pre-Trained Transformers}}
 
 Στο ερώτημα αυτό χρησιμοποιήσαμε \textlatin{pre-trained Transformer} μοντέλα σε ρύθμιση \textlatin{zero-shot}, δηλαδή χωρίς επιπλέον εκπαίδευση 
 πάνω στα δεδομένα της άσκησης. Η υλοποίηση έγινε στο αρχείο \textlatin{transfer\_pretrained.py}, όπου για κάθε \textlatin{dataset} φορτώνεται ένα 
@@ -757,7 +772,7 @@ y = x' + \operatorname{FeedForward}(\operatorname{LayerNorm}(x'))
 
 \phantomsection
 \subsection*{Ερώτημα 7 -- \textlatin{Fine-Tuning Pre-Trained Transformers}}
-\addcontentsline{toc}{subsection}{Ερώτημα 7 -- Fine-Tuning Pre-Trained Transformers}
+\addcontentsline{toc}{subsection}{Ερώτημα 7 -- \textlatin{Fine-Tuning Pre-Trained Transformers}}
 
 % Χρησιμοποιήστε finetune_pretrained.py (Google Colab)
 % Τουλάχιστον 3 μοντέλα για κάθε dataset
@@ -796,7 +811,7 @@ y = x' + \operatorname{FeedForward}(\operatorname{LayerNorm}(x'))
 
 \phantomsection
 \subsection*{Ερώτημα 8 -- Διάλογος με \textlatin{ChatGPT} για \textlatin{GPT} Κώδικα}
-\addcontentsline{toc}{subsection}{Ερώτημα 8 -- Διάλογος με ChatGPT}
+\addcontentsline{toc}{subsection}{Ερώτημα 8 -- Διάλογος με \textlatin{ChatGPT}}
 
 % Χρησιμοποιήστε τον κώδικα "Let's build GPT: from scratch, in code, spelled out"
 % Ζητήστε από το ChatGPT: εξήγηση, αξιολόγηση, refactoring
