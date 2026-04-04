@@ -431,8 +431,32 @@ q_i = x_i W_Q,\qquad k_i = x_i W_K,\qquad v_i = x_i W_V
 \subsection*{Ερώτημα 4 -- \textlatin{Multi-Head Attention}}
 \addcontentsline{toc}{subsection}{Ερώτημα 4 -- Multi-Head Attention}
 
-% Συμπληρώστε τα κενά στο attention.MultiHeadAttentionModel
-% Βασιστείτε στο SimpleSelfAttentionModel
+Στο ερώτημα αυτό επεκτείνουμε το απλό \textlatin{self-attention} σε \textlatin{multi-head attention}. Ενώ στο \textlatin{SimpleSelfAttentionModel} 
+υπάρχει μία μόνο κεφαλή προσοχής που υπολογίζει μία ενιαία σταθμισμένη σύνοψη των \textlatin{value vectors}, στο \textlatin{MultiHeadAttentionModel} 
+χρησιμοποιούνται πολλές κεφαλές παράλληλα, καθεμία με δικά της βάρη προβολής για \textlatin{queries}, \textlatin{keys} και \textlatin{values}. Έτσι κ
+άθε κεφαλή μπορεί να εστιάζει σε διαφορετικές σχέσεις ή διαφορετικά πρότυπα μέσα στην πρόταση.
+
+Πιο συγκεκριμένα, για κάθε κεφαλή \(c\), οι είσοδοι προβάλλονται σε ξεχωριστά \textlatin{query}, \textlatin{key} και \textlatin{value} διανύσματα, 
+υπολογίζονται ανεξάρτητα τα βάρη προσοχής και παράγεται ένα επιμέρους \textlatin{head output}. Στη συνέχεια, τα αποτελέσματα όλων των κεφαλών 
+συνενώνονται και προβάλλονται ξανά στον αρχικό χώρο αναπαράστασης. Με αυτόν τον τρόπο το μοντέλο αποκτά πλουσιότερη και πιο εκφραστική αναπαράσταση 
+της πρότασης σε σχέση με τη SimpleSelfAttention εκδοχή.
+
+Για κάθε κεφαλή \(c\), οι βασικοί υπολογισμοί περιγράφονται από τις εξισώσεις:
+\[
+q_i^{(c)} = x_i W_Q^{(c)},\qquad k_j^{(c)} = x_j W_K^{(c)},\qquad v_j^{(c)} = x_j W_V^{(c)}
+\]
+\[
+\alpha_{ij}^{(c)} = \operatorname{softmax}\left(\frac{q_i^{(c)} \cdot k_j^{(c)}}{\sqrt{d_k}}\right)
+\]
+\[
+\operatorname{head}_i^{(c)} = \sum_{j} \alpha_{ij}^{(c)} v_j^{(c)}
+\]
+και η τελική έξοδος του \textlatin{multi-head attention} προκύπτει από τη συνένωση όλων των κεφαλών και την τελική γραμμική προβολή:
+\[
+a_i = \left(\operatorname{head}_i^{(1)} \oplus \operatorname{head}_i^{(2)} \oplus \cdots \oplus \operatorname{head}_i^{(A)}\right) W_O
+\]
+
+Στη δική μας υλοποίηση, μετά την εφαρμογή του \textlatin{multi-head attention}, χρησιμοποιείται \textlatin{average-pooling} για την εξαγωγή της τελικής αναπαράστασης της πρότασης πριν από το τελευταίο γραμμικό \textlatin{layer} ταξινόμησης. Η επίδοση του μοντέλου στο \textlatin{test set} παρουσιάζεται στον αντίστοιχο πίνακα αποτελεσμάτων.
 
 \begin{table}[H]
   \centering
