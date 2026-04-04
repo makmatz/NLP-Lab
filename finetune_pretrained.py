@@ -69,7 +69,7 @@ if __name__ == '__main__':
             # training setup
             args = TrainingArguments(
                 output_dir=f"output/{DATASET}/{PRETRAINED_MODEL}",
-                evaluation_strategy="epoch",
+                eval_strategy="epoch",
                 num_train_epochs=3,
                 per_device_train_batch_size=16,
                 per_device_eval_batch_size=32,
