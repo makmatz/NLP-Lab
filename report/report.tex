@@ -674,15 +674,15 @@ def eval_dataset(dataloader, model, loss_function):
 
 % Επιλέξτε τουλάχιστον 20 κείμενα από κάθε κατηγορία και χρησιμοποιήστε το ChatGPT.
 
-\paragraph{\textlatin{Prompts} που χρησιμοποιήθηκαν:}
+\paragraph{Προτροπές που χρησιμοποιήθηκαν:}
 
 Για την αξιολόγηση του \textlatin{ChatGPT} επιλέξαμε ισορροπημένα δείγματα από τα δύο \textlatin{datasets}: 20 κείμενα ανά κατηγορία. Στο \textlatin{MR} χρησιμοποιήθηκαν συνολικά 40 προτάσεις (20 \textlatin{positive}, 20 \textlatin{negative}), ενώ στο \textlatin{Semeval 2017} χρησιμοποιήθηκαν συνολικά 60 \textlatin{tweets} (20 \textlatin{positive}, 20 \textlatin{negative}, 20 \textlatin{neutral}). Οι μετρικές που ακολουθούν αφορούν αυτό το δειγματοληπτικό σύνολο αξιολόγησης και όχι ολόκληρα τα αρχικά \textlatin{datasets}.
 
 Δοκιμάστηκαν τρεις βασικές μορφές \textlatin{prompt}:
 \begin{itemize}
-  \item \textlatin{Classify the sentiment of the following text as positive, negative, or neutral. Answer with one label only.}
-  \item \textlatin{Classify the sentiment of the following text. First output the label, then briefly explain the reason for the decision.}
-  \item \textlatin{Classify the overall sentiment of the text, not the topic it mentions. Choose only from: positive, negative, neutral. If the text is mixed or mainly informative, prefer neutral.}
+  \item «Κατάταξε το συναίσθημα του παρακάτω κειμένου ως \textlatin{positive}, \textlatin{negative} ή \textlatin{neutral}. Δώσε μόνο μία ετικέτα ως απάντηση.»
+  \item «Κατάταξε το συναίσθημα του παρακάτω κειμένου. Πρώτα δώσε την ετικέτα και έπειτα εξήγησε σύντομα τον λόγο της απόφασης.»
+  \item «Κατάταξε το συνολικό συναίσθημα του κειμένου και όχι το θέμα στο οποίο αναφέρεται. Επίλεξε μόνο από: \textlatin{positive}, \textlatin{negative}, \textlatin{neutral}. Αν το κείμενο είναι μικτό ή κυρίως πληροφοριακό, προτίμησε την κατηγορία \textlatin{neutral}.»
 \end{itemize}
 
 Η τρίτη μορφή \textlatin{prompt} αποδείχθηκε η πιο αξιόπιστη, ιδιαίτερα για το \textlatin{Semeval 2017}, όπου πολλά \textlatin{tweets} περιέχουν \textlatin{hashtags}, ειρωνεία, ειδησεογραφικό ύφος ή αναφορά σε γεγονότα χωρίς καθαρή συναισθηματική τοποθέτηση. Για τη μέτρηση της επίδοσης χρησιμοποιήσαμε τις ίδιες μετρικές με πριν: \textlatin{accuracy}, \textlatin{recall (macro average)} και \textlatin{F1-score (macro average)}.
@@ -693,15 +693,12 @@ def eval_dataset(dataloader, model, loss_function):
 
 \textbf{Παράδειγμα 1 -- Δυαδική ταξινόμηση (\textlatin{MR})}
 
-\textbf{\textlatin{Prompt:}}
-\selectlanguage{english}
-\begin{verbatim}
-Classify the sentiment of the following movie review as positive or negative.
-Answer with one label only.
-Text: "one of the year's best films , featuring an oscar-worthy performance
-by julianne moore ."
-\end{verbatim}
-\selectlanguage{greek}
+\textbf{Προτροπή:}
+\begin{quote}
+Κατάταξε το συναίσθημα της παρακάτω κινηματογραφικής κριτικής ως \textlatin{positive} ή
+\textlatin{negative}. Απάντησε μόνο με μία ετικέτα.\\
+\textbf{Κείμενο:} \textlatin{"one of the year's best films , featuring an oscar-worthy performance by julianne moore ."}
+\end{quote}
 
 \textbf{\textlatin{ChatGPT response:}}
 \selectlanguage{english}
@@ -714,15 +711,12 @@ positive
 
 \textbf{Παράδειγμα 2 -- Δυαδική ταξινόμηση με σύντομη εξήγηση (\textlatin{MR})}
 
-\textbf{\textlatin{Prompt:}}
-\selectlanguage{english}
-\begin{verbatim}
-Classify the sentiment of the following movie review as positive or negative.
-Then explain briefly why.
-Text: "throughout all the tumult , a question comes to mind : so why is this
-so boring ?"
-\end{verbatim}
-\selectlanguage{greek}
+\textbf{Προτροπή:}
+\begin{quote}
+Κατάταξε το συναίσθημα της παρακάτω κινηματογραφικής κριτικής ως \textlatin{positive} ή
+\textlatin{negative}. Στη συνέχεια εξήγησε σύντομα γιατί.\\
+\textbf{Κείμενο:} \textlatin{"throughout all the tumult , a question comes to mind : so why is this so boring ?"}
+\end{quote}
 
 \textbf{\textlatin{ChatGPT response:}}
 \selectlanguage{english}
@@ -737,15 +731,12 @@ about the film.
 
 \textbf{Παράδειγμα 3 -- Τριταξική ταξινόμηση (\textlatin{Semeval 2017})}
 
-\textbf{\textlatin{Prompt:}}
-\selectlanguage{english}
-\begin{verbatim}
-Classify the sentiment of the following tweet as positive, negative, or
-neutral. Answer with one label only.
-Tweet: "Ariana Grande White House Easter Egg Roll in Washington
-https://t.co/jdjL9swWM8 #ArianaGrande"
-\end{verbatim}
-\selectlanguage{greek}
+\textbf{Προτροπή:}
+\begin{quote}
+Κατάταξε το συναίσθημα του παρακάτω \textlatin{tweet} ως \textlatin{positive}, \textlatin{negative}
+ή \textlatin{neutral}. Απάντησε μόνο με μία ετικέτα.\\
+\textbf{\textlatin{Tweet:}} \textlatin{"Ariana Grande White House Easter Egg Roll in Washington https://t.co/jdjL9swWM8 \#ArianaGrande"}
+\end{quote}
 
 \textbf{\textlatin{ChatGPT response:}}
 \selectlanguage{english}
@@ -758,15 +749,13 @@ neutral
 
 \textbf{Παράδειγμα 4 -- Αρνητικό \textlatin{tweet} με αιτιολόγηση (\textlatin{Semeval 2017})}
 
-\textbf{\textlatin{Prompt:}}
-\selectlanguage{english}
-\begin{verbatim}
-Classify the overall sentiment of the following tweet as positive, negative,
-or neutral. Then explain which words are the strongest sentiment cues.
-Tweet: "Soros brainwashes & enslaves U #blacklivesmatter protesting fools.
-So naive. U want socialism? Study Venezuela & compare. Morons!"
-\end{verbatim}
-\selectlanguage{greek}
+\textbf{Προτροπή:}
+\begin{quote}
+Κατάταξε το συνολικό συναίσθημα του παρακάτω \textlatin{tweet} ως \textlatin{positive},
+\textlatin{negative} ή \textlatin{neutral}. Στη συνέχεια εξήγησε ποιες λέξεις αποτελούν
+τις ισχυρότερες ενδείξεις συναισθήματος.\\
+\textbf{\textlatin{Tweet:}} \textlatin{"Soros brainwashes \& enslaves U \#blacklivesmatter protesting fools. So naive. U want socialism? Study Venezuela \& compare. Morons!"}
+\end{quote}
 
 \textbf{\textlatin{ChatGPT response:}}
 \selectlanguage{english}
@@ -781,14 +770,13 @@ express hostility and contempt.
 
 \textbf{Παράδειγμα 5 -- Δύσκολη περίπτωση μικτού συναισθήματος (\textlatin{Semeval 2017})}
 
-\textbf{\textlatin{Prompt:}}
-\selectlanguage{english}
-\begin{verbatim}
-Classify the sentiment of the following tweet as positive, negative, or
-neutral. If the tweet is mainly informative or mixed, prefer neutral.
-Tweet: "I hate her but... I love her songs Dammit ._. #ArianaGrande"
-\end{verbatim}
-\selectlanguage{greek}
+\textbf{Προτροπή:}
+\begin{quote}
+Κατάταξε το συναίσθημα του παρακάτω \textlatin{tweet} ως \textlatin{positive}, \textlatin{negative}
+ή \textlatin{neutral}. Αν το \textlatin{tweet} είναι κυρίως πληροφοριακό ή εκφράζει μικτό
+συναίσθημα, προτίμησε την κατηγορία \textlatin{neutral}.\\
+\textbf{\textlatin{Tweet:}} \textlatin{"I hate her but... I love her songs Dammit .\_. \#ArianaGrande"}
+\end{quote}
 
 \textbf{\textlatin{ChatGPT response:}}
 \selectlanguage{english}
@@ -1286,16 +1274,183 @@ y = x' + \operatorname{FeedForward}(\operatorname{LayerNorm}(x'))
 \subsection*{Ερώτημα 8 -- Διάλογος με \textlatin{ChatGPT} για \textlatin{GPT} Κώδικα}
 \addcontentsline{toc}{subsection}{Ερώτημα 8 -- Διάλογος με \textlatin{ChatGPT}}
 
-% Χρησιμοποιήστε τον κώδικα "Let's build GPT: from scratch, in code, spelled out"
-% Ζητήστε από το ChatGPT: εξήγηση, αξιολόγηση, refactoring
-
 \paragraph{Παραδείγματα διαλόγου:}
 
-% TODO: Επικολλήστε αντιπροσωπευτικά αποσπάσματα του διαλόγου με το ChatGPT
+Στο ερώτημα αυτό χρησιμοποιήσαμε το αρχείο \textlatin{gpt\_dev.py}, το οποίο περιέχει τον κώδικα του tutorial
+\textlatin{``Let's build GPT: from scratch, in code, spelled out''}. Ο διάλογος με το \textlatin{ChatGPT}
+έγινε σε τρία στάδια: λεπτομερής εξήγηση του κώδικα, αξιολόγηση του ως κώδικα λογισμικού και πρόταση
+\textlatin{refactoring}. Παρακάτω παρατίθενται αντιπροσωπευτικά αποσπάσματα του πραγματικού διαλόγου.
+
+\textbf{Ερώτηση 1:} \emph{Εξήγησέ μου αναλυτικά τι κάνει το \textlatin{gpt\_dev.py}, από το πρώτο \textlatin{bigram}
+μοντέλο μέχρι το τελικό \textlatin{transformer} μοντέλο, με έμφαση στον ρόλο κάθε ενότητας και στα σχήματα των \textlatin{tensors}.}
+
+\textbf{Απόσπασμα απάντησης \textlatin{ChatGPT}:}
+
+Το \textlatin{gpt\_dev.py} είναι ένα εκπαιδευτικό \textlatin{walkthrough}, το οποίο ξεκινά από ένα πολύ απλό
+\textlatin{bigram language model} και καταλήγει σε ένα μικρό \textlatin{decoder-only Transformer} για
+\textlatin{character-level language modeling}. Αρχικά φορτώνει το \textlatin{tinyshakespeare} dataset,
+δημιουργεί λεξιλόγιο χαρακτήρων και αντιστοιχίες \textlatin{character-to-index}. Στη συνέχεια ορίζει ένα πρώτο
+\textlatin{BigramLanguageModel}, στο οποίο η είσοδος \textlatin{idx} έχει σχήμα $(B,T)$ και τα \textlatin{logits}
+που παράγονται έχουν σχήμα $(B,T,\textlatin{vocab\_size})$. Μετά από τα ενδιάμεσα παραδείγματα για
+\textlatin{weighted averaging}, \textlatin{masked attention} και \textlatin{query/key/value}, ο κώδικας χτίζει τις
+κλάσεις \textlatin{Head}, \textlatin{MultiHeadAttention}, \textlatin{FeedFoward}, \textlatin{Block} και τελικά
+το πλήρες μοντέλο με \textlatin{token embeddings}, \textlatin{position embeddings}, στοίβα από
+\textlatin{Transformer blocks}, τελικό \textlatin{LayerNorm} και \textlatin{language modeling head}. Στο τελικό
+μοντέλο, η είσοδος $(B,T)$ προβάλλεται σε $(B,T,n\_embd)$ και τα τελικά \textlatin{logits} έχουν και πάλι σχήμα
+$(B,T,\textlatin{vocab\_size})$.
+
+\textbf{Ερώτηση 2:} \emph{Αξιολόγησε το \textlatin{gpt\_dev.py} ως κώδικα λογισμικού και όχι μόνο ως \textlatin{tutorial}.
+Ποια είναι τα βασικά δυνατά του σημεία, οι αδυναμίες του και οι κίνδυνοι που έχει;}
+
+\textbf{Απόσπασμα απάντησης \textlatin{ChatGPT}:}
+
+Ως εκπαιδευτικός κώδικας, το \textlatin{gpt\_dev.py} είναι πολύ αποτελεσματικό, επειδή ακολουθεί εξαιρετική
+παιδαγωγική κλιμάκωση: ξεκινά από το απλούστερο δυνατό μοντέλο και χτίζει σταδιακά προς το τελικό
+\textlatin{Transformer}. Ως κώδικας λογισμικού όμως έχει σαφείς αδυναμίες. Είναι \textlatin{notebook export} και όχι
+καθαρό \textlatin{Python script}, αναμειγνύει \textlatin{tutorial/demo code} με το τελικό \textlatin{training code},
+εξαρτάται υπερβολικά από global μεταβλητές όπως \textlatin{n\_embd}, \textlatin{block\_size}, \textlatin{dropout}
+και επαναχρησιμοποιεί το όνομα \textlatin{BigramLanguageModel} για δύο διαφορετικά μοντέλα. Επομένως, είναι πολύ
+καλό για να μάθει κανείς από αυτό, αλλά όχι ιδανικό για να το χρησιμοποιήσει αυτούσιο ως συντηρήσιμο και επεκτάσιμο
+\textlatin{module}.
+
+\textbf{Ερώτηση 3:} \emph{Ξαναγράψε κάποιο ουσιαστικό τμήμα του \textlatin{gpt\_dev.py} με \textlatin{refactoring},
+κρατώντας την ίδια βασική συμπεριφορά αλλά βελτιώνοντας τη δομή του. Εξήγησε ακριβώς τι άλλαξες και γιατί.}
+
+\textbf{Απόσπασμα απάντησης \textlatin{ChatGPT}:}
+
+Το \textlatin{refactoring} έγινε σε ξεχωριστό αρχείο και όχι πάνω στο αρχικό \textlatin{gpt\_dev.py}, ώστε να
+διατηρηθεί ο \textlatin{tutorial} χαρακτήρας του αρχικού κώδικα. Οι βασικές αλλαγές ήταν οι εξής:
+\begin{itemize}
+  \item συγκέντρωση των υπερπαραμέτρων σε μία \textlatin{dataclass} \textlatin{GPTConfig},
+  \item πέρασμα του \textlatin{config} μέσα στις κλάσεις \textlatin{Head}, \textlatin{MultiHeadAttention},
+  \textlatin{FeedFoward}, \textlatin{Block} και \textlatin{BigramLanguageModel}, ώστε να μειωθεί η εξάρτηση από
+  global μεταβλητές,
+  \item χρήση του \textlatin{@torch.inference\_mode()} στη συνάρτηση \textlatin{estimate\_loss}, ώστε να
+  μειώνεται το περιττό \textlatin{autograd overhead} κατά την αξιολόγηση,
+  \item χρήση του \textlatin{idx.device} στο \textlatin{forward}, ώστε η τοποθέτηση των \textlatin{position embeddings}
+  να ακολουθεί τη συσκευή της εισόδου αντί να εξαρτάται από σταθερό global \textlatin{device},
+  \item διατήρηση της ίδιας βασικής λογικής του \textlatin{decoder-only Transformer} χωρίς αλλαγή του αλγορίθμου
+  ή των μαθηματικών πράξεων εκπαίδευσης.
+\end{itemize}
+
+Παρακάτω φαίνεται ένα χαρακτηριστικό τμήμα του \textlatin{refactored} κώδικα:
+
+\selectlanguage{english}
+\begin{lstlisting}[caption={Refactored configuration and model skeleton}]
+from dataclasses import dataclass
+
+import torch
+import torch.nn as nn
+from torch.nn import functional as F
+
+
+@dataclass
+class GPTConfig:
+    vocab_size: int
+    block_size: int = 32
+    n_embd: int = 64
+    n_head: int = 4
+    n_layer: int = 4
+    dropout: float = 0.0
+
+
+class BigramLanguageModel(nn.Module):
+    def __init__(self, config: GPTConfig):
+        super().__init__()
+        self.config = config
+        self.token_embedding_table = nn.Embedding(config.vocab_size, config.n_embd)
+        self.position_embedding_table = nn.Embedding(config.block_size, config.n_embd)
+        self.blocks = nn.Sequential(*[Block(config) for _ in range(config.n_layer)])
+        self.ln_f = nn.LayerNorm(config.n_embd)
+        self.lm_head = nn.Linear(config.n_embd, config.vocab_size)
+
+    def forward(self, idx, targets=None):
+        B, T = idx.shape
+        tok_emb = self.token_embedding_table(idx)
+        pos_emb = self.position_embedding_table(torch.arange(T, device=idx.device))
+        x = tok_emb + pos_emb
+        x = self.blocks(x)
+        x = self.ln_f(x)
+        logits = self.lm_head(x)
+
+        if targets is None:
+            return logits, None
+
+        B, T, C = logits.shape
+        loss = F.cross_entropy(logits.view(B * T, C), targets.view(B * T))
+        return logits, loss
+
+    def generate(self, idx, max_new_tokens):
+        for _ in range(max_new_tokens):
+            idx_cond = idx[:, -self.config.block_size:]
+            logits, _ = self(idx_cond)
+            logits = logits[:, -1, :]
+            probs = F.softmax(logits, dim=-1)
+            idx_next = torch.multinomial(probs, num_samples=1)
+            idx = torch.cat((idx, idx_next), dim=1)
+        return idx
+\end{lstlisting}
+\selectlanguage{greek}
+
+\paragraph{Σύγκριση αρχικού και \textlatin{refactored} run:}
+
+Για να αξιολογήσουμε αν το \textlatin{refactoring} επηρέασε πρακτικά τη συμπεριφορά του μοντέλου,
+τρέξαμε τόσο την αρχική όσο και τη \textlatin{refactored} εκδοχή του notebook στο \textlatin{Colab},
+κρατώντας ίδιες τις υπερπαραμέτρους, το \textlatin{dataset}, το \textlatin{training loop} και τον αρχικό
+\textlatin{random seed}. Τα αποτελέσματα συνοψίζονται στον παρακάτω πίνακα.
+
+\begin{table}[H]
+  \centering
+  \caption{Σύγκριση αρχικού και \textlatin{refactored} \textlatin{GPT} κώδικα}
+  \begin{tabular}{lccc}
+    \toprule
+    \textbf{Έκδοση} & \textbf{Παράμετροι} & \textbf{Τελικό \textlatin{train loss}} & \textbf{Τελικό \textlatin{val loss}} \\
+    \midrule
+    Αρχική εκδοχή & 0.209729 M & 1.6635 & 1.8226 \\
+    \textlatin{Refactored} εκδοχή & 0.209729 M & 1.6645 & 1.8286 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Παρατηρούμε ότι ο αριθμός παραμέτρων παρέμεινε ακριβώς ίδιος, όπως ήταν αναμενόμενο, αφού το
+\textlatin{refactoring} δεν άλλαξε την αρχιτεκτονική του μοντέλου. Οι διαφορές στα τελικά \textlatin{losses}
+είναι πολύ μικρές, αλλά κινούνται προς τη χειρότερη κατεύθυνση: το \textlatin{train loss} αυξήθηκε κατά περίπου
+0.0010 και το \textlatin{validation loss} κατά περίπου 0.0060. Οι αποκλίσεις αυτές είναι μικρές και συμβατές
+με τη στοχαστικότητα της εκπαίδευσης, αλλά σε κάθε περίπτωση δεν αποτελούν ένδειξη βελτίωσης της απόδοσης.
+
+Ποιοτικά, και οι δύο εκδοχές παρήγαγαν κείμενο με παρόμοιο \textlatin{Shakespeare-like} ύφος:
+σωστή μορφοποίηση ονομάτων χαρακτήρων, τμηματική συντακτική συνοχή και αρκετό θόρυβο σε επίπεδο λέξης.
+Άρα, από πειραματική άποψη, το \textlatin{refactoring} διατήρησε σχεδόν αμετάβλητη τη συμπεριφορά του μοντέλου,
+χωρίς όμως να προσφέρει μετρήσιμο κέρδος στην επίδοση.
 
 \paragraph{Σχολιασμός απόδοσης:}
 
-% TODO: Εξηγήθηκε σωστά ο κώδικας; Ήταν η αξιολόγηση σωστή; Πώς ήταν το refactoring;
+Η απόδοση του \textlatin{ChatGPT} στο πρώτο σκέλος, δηλαδή στην αναλυτική εξήγηση του κώδικα, ήταν πολύ καλή.
+Η απάντηση ήταν δομημένη, ακολούθησε σωστά τη ροή του αρχείου και απέδωσε με σαφήνεια τον ρόλο των βασικών
+ενοτήτων και τα σχήματα των \textlatin{tensors}. Αυτό ήταν ιδιαίτερα χρήσιμο, επειδή το συγκεκριμένο αρχείο
+είναι μεγάλο και αναμειγνύει εκπαιδευτικά παραδείγματα με τελικό μοντέλο.
+
+Στο δεύτερο σκέλος, δηλαδή στην αξιολόγηση του κώδικα, η απόδοση ήταν επίσης ικανοποιητική και αρκετά αυστηρή.
+Το \textlatin{ChatGPT} εντόπισε πραγματικές αδυναμίες του αρχείου, όπως την εξάρτηση από global μεταβλητές,
+την επαναχρησιμοποίηση του ονόματος \textlatin{BigramLanguageModel} και το γεγονός ότι το αρχείο είναι περισσότερο
+\textlatin{notebook export} παρά καθαρό \textlatin{module}. Η κριτική αυτή ήταν χρήσιμη, αν και πρέπει να
+ληφθεί υπόψη ότι ορισμένες από αυτές τις αδυναμίες είναι, σε κάποιο βαθμό, συνέπεια του εκπαιδευτικού χαρακτήρα
+του tutorial και όχι απλώς κακού σχεδιασμού.
+
+Στο τρίτο σκέλος, δηλαδή στο \textlatin{refactoring}, η συμβολή του \textlatin{ChatGPT} ήταν ουσιαστική κυρίως
+σε επίπεδο οργάνωσης του κώδικα. Η προτεινόμενη εκδοχή είναι σαφέστερη, πιο modular και ευκολότερη στη συντήρηση.
+Σε αυτή την περίπτωση πραγματοποιήθηκε και πραγματική σύγκριση με την αρχική εκδοχή. Η σύγκριση έδειξε ότι
+το \textlatin{refactoring} δεν οδήγησε σε βελτίωση της επίδοσης: τα τελικά \textlatin{losses} παρέμειναν σχεδόν ίδια,
+αλλά ήταν οριακά χειρότερα στη νέα εκδοχή, ενώ η ποιότητα του παραγόμενου κειμένου ήταν αντίστοιχη. Συνεπώς,
+η αξία του \textlatin{refactoring} δεν ήταν η βελτίωση της μαθησιακής ικανότητας του μοντέλου, αλλά η βελτίωση της
+δομής, της αναγνωσιμότητας και της διαδικασίας αξιολόγησης του κώδικα.
+
+Συνολικά, το \textlatin{ChatGPT} απέδωσε πολύ καλά στην εξήγηση, καλά στην αξιολόγηση του κώδικα και ικανοποιητικά
+στο \textlatin{refactoring}. Η αυστηρή αποτίμηση είναι ότι, στο τρίτο σκέλος, το \textlatin{ChatGPT} παρήγαγε
+ένα χρήσιμο \textlatin{software refactoring}, αλλά όχι ένα επιτυχημένο \textlatin{performance refactoring}.
+Αυτό δείχνει ότι μπορεί να είναι πολύ αποτελεσματικό ως εργαλείο κατανόησης, αναθεώρησης και αναδιοργάνωσης
+κώδικα, αλλά οι προτάσεις του πρέπει να ελέγχονται πειραματικά και να κρίνονται αυστηρά όταν παρουσιάζονται
+ως πιθανές βελτιστοποιήσεις.
 
 % ============================================================
 %  ΣΥΓΚΕΝΤΡΩΤΙΚΑ ΑΠΟΤΕΛΕΣΜΑΤΑ

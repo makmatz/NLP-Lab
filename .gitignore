@@ -24,3 +24,14 @@ report/*.snm
 report/*.vrb
 report/*.lof
 report/*.lot
+
+# Local notebook / analysis artifacts
+gpt_dev.ipynb
+gpt_dev.py
+report/chatgpt_eval_dialogs.md
+report/chatgpt_eval_results.tsv
+report/chatgpt_eval_summary.md
+report/question8_chatgpt_dialogue.md
+report/question8_old_run_results.md
+report/question8_refactor_example.py
+report/question8_refactored_run_results.md
