@@ -626,6 +626,29 @@ def eval_dataset(dataloader, model, loss_function):
 % Για κάθε ένα από τα 2 datasets, αναφέρετε accuracy, F1-score (macro), recall (macro).
 % Δημιουργήστε γραφικές παραστάσεις training/test loss ανά εποχή.
 
+Για την αξιολόγηση του μοντέλου χρησιμοποιήσαμε τρεις βασικές μετρικές: \textlatin{accuracy}, \textlatin{recall (macro average)} και 
+\textlatin{F1-score (macro average)}. Η \textlatin{accuracy} μετρά το ποσοστό των συνολικά σωστών προβλέψεων και δίνει μια γενική εικόνα της 
+επίδοσης του μοντέλου. Είναι εύκολα κατανοητή, αλλά μπορεί να είναι παραπλανητική όταν οι κλάσεις δεν είναι ισοκατανεμημένες. Το \textlatin{recall} 
+με \textlatin{macro average} υπολογίζει το \textlatin{recall} ξεχωριστά για κάθε κλάση και στη συνέχεια παίρνει τον μέσο όρο, δίνοντας έτσι 
+ίση βαρύτητα σε όλες τις κλάσεις. Αυτό είναι χρήσιμο όταν θέλουμε να αξιολογήσουμε αν το μοντέλο αναγνωρίζει επαρκώς όλες τις κατηγορίες και όχι 
+μόνο την επικρατέστερη. Το \textlatin{F1-score (macro average)} συνδυάζει \textlatin{precision} και \textlatin{recall} σε μία ενιαία μετρική και είναι 
+ιδιαίτερα χρήσιμο όταν μας ενδιαφέρει η ισορροπία ανάμεσα στις σωστές θετικές προβλέψεις και στην ικανότητα εντοπισμού των πραγματικών παραδειγμάτων 
+κάθε κλάσης. Συνολικά, οι τρεις αυτές μετρικές δίνουν συμπληρωματική εικόνα της συμπεριφοράς του μοντέλου.
+
+Για το \textlatin{Sentence Polarity (MR)} το \textlatin{baseline} μοντέλο πέτυχε \textlatin{accuracy} 0.7281, \textlatin{F1-score (macro)} 0.7279 και 
+\textlatin{recall (macro)} 0.7281. Οι τιμές αυτές είναι πολύ κοντά μεταξύ τους, κάτι που δείχνει ότι η απόδοση του μοντέλου είναι σχετικά ισορροπημένη 
+και ότι δεν υπάρχει έντονη απόκλιση ανάμεσα στις κλάσεις. Δεδομένου ότι το \textlatin{MR} είναι πρόβλημα δυαδικής ταξινόμησης, η μικρή διαφορά ανάμεσα 
+στις μετρικές υποδηλώνει ότι το μοντέλο δεν ευνοεί έντονα τη μία από τις δύο κλάσεις εις βάρος της άλλης. Παρ' όλα αυτά, η συνολική επίδοση παραμένει 
+μέτρια, κάτι που είναι αναμενόμενο για μία τόσο απλή αρχιτεκτονική, η οποία βασίζεται στον μέσο όρο των \textlatin{word embeddings} και δεν λαμβάνει 
+υπόψη τη σειρά των λέξεων ή πιο σύνθετες αλληλεπιδράσεις μέσα στην πρόταση.
+
+Από τις καμπύλες εκπαίδευσης παρατηρούμε ότι το \textlatin{training loss} μειώνεται σταδιακά όσο προχωρούν οι εποχές, κάτι που δείχνει ότι το μοντέλο 
+μαθαίνει από τα δεδομένα εκπαίδευσης. Το \textlatin{validation/test loss} αρχικά επίσης μειώνεται, αλλά στη συνέχεια σταθεροποιείται ή παύει να 
+βελτιώνεται με τον ίδιο ρυθμό. Αυτή η συμπεριφορά είναι τυπική και δείχνει ότι, μετά από ένα σημείο, η περαιτέρω εκπαίδευση δεν οδηγεί απαραίτητα σε 
+καλύτερη γενίκευση. Για αυτόν τον λόγο χρησιμοποιείται και το \textlatin{early stopping}, ώστε η εκπαίδευση να σταματά όταν το μοντέλο δεν συνεχίζει 
+να βελτιώνεται στο σύνολο αξιολόγησης. Συνολικά, η μορφή των καμπυλών είναι συμβατή με ένα μοντέλο που μαθαίνει ουσιαστικά, αλλά του οποίου η εκφραστική 
+ικανότητα παραμένει περιορισμένη λόγω της απλότητας της αναπαράστασης.
+
 \begin{table}[H]
   \centering
   \caption{Αποτελέσματα \textlatin{Baseline} μοντέλου}
@@ -653,7 +676,16 @@ def eval_dataset(dataloader, model, loss_function):
 
 \paragraph{\textlatin{Prompts} που χρησιμοποιήθηκαν:}
 
-% TODO: Περιγράψτε τα prompts που δοκιμάσατε
+Για την αξιολόγηση του \textlatin{ChatGPT} επιλέξαμε ισορροπημένα δείγματα από τα δύο \textlatin{datasets}: 20 κείμενα ανά κατηγορία. Στο \textlatin{MR} χρησιμοποιήθηκαν συνολικά 40 προτάσεις (20 \textlatin{positive}, 20 \textlatin{negative}), ενώ στο \textlatin{Semeval 2017} χρησιμοποιήθηκαν συνολικά 60 \textlatin{tweets} (20 \textlatin{positive}, 20 \textlatin{negative}, 20 \textlatin{neutral}).
+
+Δοκιμάστηκαν τρεις βασικές μορφές \textlatin{prompt}:
+\begin{itemize}
+  \item \textlatin{Classify the sentiment of the following text as positive, negative, or neutral. Answer with one label only.}
+  \item \textlatin{Classify the sentiment of the following text. First output the label, then briefly explain the reason for the decision.}
+  \item \textlatin{Classify the overall sentiment of the text, not the topic it mentions. Choose only from: positive, negative, neutral. If the text is mixed or mainly informative, prefer neutral.}
+\end{itemize}
+
+Η τρίτη μορφή \textlatin{prompt} αποδείχθηκε η πιο αξιόπιστη, ιδιαίτερα για το \textlatin{Semeval 2017}, όπου πολλά \textlatin{tweets} περιέχουν \textlatin{hashtags}, ειρωνεία, ειδησεογραφικό ύφος ή αναφορά σε γεγονότα χωρίς καθαρή συναισθηματική τοποθέτηση. Για τη μέτρηση της επίδοσης χρησιμοποιήσαμε τις ίδιες μετρικές με πριν: \textlatin{accuracy}, \textlatin{recall (macro average)} και \textlatin{F1-score (macro average)}.
 
 \paragraph{Επίδοση μοντέλου:}
 
@@ -664,15 +696,19 @@ def eval_dataset(dataloader, model, loss_function):
     \toprule
     \textbf{\textlatin{Dataset}} & \textbf{\textlatin{Accuracy}} & \textbf{\textlatin{F1 (macro)}} & \textbf{\textlatin{Recall (macro)}} \\
     \midrule
-    \textlatin{Sentence Polarity} & -- & -- & -- \\
-    \textlatin{Semeval 2017}      & -- & -- & -- \\
+    \textlatin{Sentence Polarity} & 0.9750 & 0.9750 & 0.9750 \\
+    \textlatin{Semeval 2017}      & 0.8500 & 0.8461 & 0.8500 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \paragraph{Ανάλυση αποτελεσμάτων:}
 
-% TODO: Έκανε κάποιο λάθος; Ποιες λέξεις ήταν σημαντικότερες για το συναίσθημα;
+Στο \textlatin{MR}, το \textlatin{ChatGPT} απέδωσε εξαιρετικά καλά, κάτι που ήταν αναμενόμενο, επειδή οι περισσότερες προτάσεις του συνόλου αυτού είναι σύντομες κριτικές με σχετικά καθαρό και άμεσο συναισθηματικό προσανατολισμό. Λέξεις και φράσεις όπως \textlatin{best}, \textlatin{great}, \textlatin{worth seeing}, \textlatin{ingenious}, \textlatin{tedious}, \textlatin{boring}, \textlatin{fails}, \textlatin{lacking} και \textlatin{dungpile} λειτούργησαν ως ισχυρές ενδείξεις για τη σωστή κατηγορία. Τα λίγα σφάλματα εμφανίστηκαν κυρίως σε παραδείγματα με πιο έμμεσο ή ειρωνικό ύφος, όπου το κείμενο συνδύαζε θετικά και αρνητικά στοιχεία.
+
+Στο \textlatin{Semeval 2017}, η επίδοση ήταν χαμηλότερη, κυρίως επειδή τα \textlatin{tweets} είναι πιο θορυβώδη, πιο σύντομα και συχνά αμφίσημα. Σε αρκετές περιπτώσεις το \textlatin{ChatGPT} μπέρδεψε το συνολικό συναίσθημα του \textlatin{tweet} με το συναίσθημα απέναντι στο θέμα ή στο \textlatin{hashtag}. Επίσης, ορισμένα \textlatin{tweets} είχαν καθαρά πληροφοριακό χαρακτήρα αλλά περιείχαν λέξεις ή \textlatin{emojis} που έδιναν την εντύπωση θετικής ή αρνητικής στάσης, οδηγώντας σε σύγχυση ανάμεσα στις κλάσεις \textlatin{neutral} και \textlatin{positive/negative}. Σημαντικά λεκτικά στοιχεία για τις προβλέψεις ήταν λέξεις όπως \textlatin{love}, \textlatin{justice}, \textlatin{great}, \textlatin{funny}, \textlatin{disgraceful}, \textlatin{terrorist}, \textlatin{hate}, αλλά και δείκτες όπως τα \textlatin{hashtags}, τα \textlatin{emojis} και η παρουσία προστακτικής ή σαρκασμού.
+
+Συνολικά, το \textlatin{ChatGPT} έδειξε πολύ καλή ικανότητα αναγνώρισης συναισθήματος σε πιο καθαρά και άμεσα κείμενα, αλλά μεγαλύτερη δυσκολία σε περιπτώσεις ειρωνείας, μικτού συναισθήματος ή ουδέτερων αναρτήσεων με έντονα επιφανειακά λεκτικά σήματα. Αυτό επιβεβαιώνει ότι ορισμένες λέξεις είναι ιδιαίτερα σημαντικές για την απόφαση του μοντέλου, αλλά η τελική ερμηνεία εξαρτάται συχνά και από το ύφος, το συγκείμενο και τη συνολική πρόθεση του κειμένου.
 
 % ============================================================
 %  ΜΕΡΟΣ Β: ΚΥΡΙΑ ΑΣΚΗΣΗ
