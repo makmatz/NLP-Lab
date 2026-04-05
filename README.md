@@ -118,15 +118,25 @@ Datasets: MR, Semeval2017A
 | Transformer Encoder (8h, 6L) | 0.7477 | 0.7456 |
 | Transformer Encoder (4h, 6L) | 0.7704 | 0.7699 |
 
-### Zero-Shot Pre-trained Transformers (Q6)
+### Zero-Shot Pre-trained Transformers — MR (Q6)
 
-| Model | MR Accuracy | Semeval Accuracy |
-|-------|-------------|------------------|
-| siebert/sentiment-roberta-large-english | 0.9260 | — |
-| textattack/bert-base-uncased-SST-2 | 0.8988 | — |
-| distilbert-base-uncased-finetuned-sst-2-english | 0.8912 | — |
-| cardiffnlp/twitter-roberta-base-sentiment | — | 0.7238 |
-| cardiffnlp/twitter-roberta-base-sentiment-latest | — | 0.7205 |
+| Model | Accuracy | Recall (macro) | F1 (macro) |
+|-------|----------|----------------|------------|
+| siebert/sentiment-roberta-large-english | 0.9260 | 0.9260 | 0.9260 |
+| textattack/bert-base-uncased-SST-2 | 0.8988 | 0.8988 | 0.8987 |
+| distilbert-base-uncased-finetuned-sst-2-english | 0.8912 | 0.8912 | 0.8912 |
+| aychang/roberta-base-imdb | 0.8489 | 0.8489 | 0.8485 |
+| lvwerra/distilbert-imdb | 0.8202 | 0.8202 | 0.8195 |
+
+### Zero-Shot Pre-trained Transformers — Semeval2017A (Q6)
+
+| Model | Accuracy | Recall (macro) | F1 (macro) |
+|-------|----------|----------------|------------|
+| cardiffnlp/twitter-roberta-base-sentiment | 0.7238 | 0.7229 | 0.7222 |
+| cardiffnlp/twitter-roberta-base-sentiment-latest | 0.7205 | 0.7330 | 0.7226 |
+| finiteautomata/bertweet-base-sentiment-analysis | 0.7178 | 0.7302 | 0.7181 |
+| cardiffnlp/twitter-xlm-roberta-base-sentiment | 0.6926 | 0.6929 | 0.6886 |
+| Seethal/sentiment_analysis_generic_dataset | 0.6184 | 0.6181 | 0.6093 |
 
 ### Fine-Tuned Transformers (Q7)
 
