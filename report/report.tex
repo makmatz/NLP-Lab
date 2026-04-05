@@ -676,7 +676,7 @@ def eval_dataset(dataloader, model, loss_function):
 
 \paragraph{\textlatin{Prompts} που χρησιμοποιήθηκαν:}
 
-Για την αξιολόγηση του \textlatin{ChatGPT} επιλέξαμε ισορροπημένα δείγματα από τα δύο \textlatin{datasets}: 20 κείμενα ανά κατηγορία. Στο \textlatin{MR} χρησιμοποιήθηκαν συνολικά 40 προτάσεις (20 \textlatin{positive}, 20 \textlatin{negative}), ενώ στο \textlatin{Semeval 2017} χρησιμοποιήθηκαν συνολικά 60 \textlatin{tweets} (20 \textlatin{positive}, 20 \textlatin{negative}, 20 \textlatin{neutral}).
+Για την αξιολόγηση του \textlatin{ChatGPT} επιλέξαμε ισορροπημένα δείγματα από τα δύο \textlatin{datasets}: 20 κείμενα ανά κατηγορία. Στο \textlatin{MR} χρησιμοποιήθηκαν συνολικά 40 προτάσεις (20 \textlatin{positive}, 20 \textlatin{negative}), ενώ στο \textlatin{Semeval 2017} χρησιμοποιήθηκαν συνολικά 60 \textlatin{tweets} (20 \textlatin{positive}, 20 \textlatin{negative}, 20 \textlatin{neutral}). Οι μετρικές που ακολουθούν αφορούν αυτό το δειγματοληπτικό σύνολο αξιολόγησης και όχι ολόκληρα τα αρχικά \textlatin{datasets}.
 
 Δοκιμάστηκαν τρεις βασικές μορφές \textlatin{prompt}:
 \begin{itemize}
@@ -686,6 +686,118 @@ def eval_dataset(dataloader, model, loss_function):
 \end{itemize}
 
 Η τρίτη μορφή \textlatin{prompt} αποδείχθηκε η πιο αξιόπιστη, ιδιαίτερα για το \textlatin{Semeval 2017}, όπου πολλά \textlatin{tweets} περιέχουν \textlatin{hashtags}, ειρωνεία, ειδησεογραφικό ύφος ή αναφορά σε γεγονότα χωρίς καθαρή συναισθηματική τοποθέτηση. Για τη μέτρηση της επίδοσης χρησιμοποιήσαμε τις ίδιες μετρικές με πριν: \textlatin{accuracy}, \textlatin{recall (macro average)} και \textlatin{F1-score (macro average)}.
+
+\paragraph{Ενδεικτικά παραδείγματα διαλόγου με \textlatin{ChatGPT}:}
+
+Παρακάτω παρουσιάζονται ενδεικτικά παραδείγματα \textlatin{prompts} και τυπικών αποκρίσεων του \textlatin{ChatGPT}, τα οποία είναι αντιπροσωπευτικά του τρόπου με τον οποίο χρησιμοποιήθηκε το μοντέλο για το συγκεκριμένο ζητούμενο.
+
+\textbf{Παράδειγμα 1 -- Δυαδική ταξινόμηση (\textlatin{MR})}
+
+\textbf{\textlatin{Prompt:}}
+\selectlanguage{english}
+\begin{verbatim}
+Classify the sentiment of the following movie review as positive or negative.
+Answer with one label only.
+Text: "one of the year's best films , featuring an oscar-worthy performance
+by julianne moore ."
+\end{verbatim}
+\selectlanguage{greek}
+
+\textbf{\textlatin{ChatGPT response:}}
+\selectlanguage{english}
+\begin{verbatim}
+positive
+\end{verbatim}
+\selectlanguage{greek}
+
+\textbf{Σχόλιο:} Η πρόβλεψη βασίζεται σε ισχυρά θετικά λεκτικά σήματα όπως \textlatin{best} και \textlatin{oscar-worthy performance}.
+
+\textbf{Παράδειγμα 2 -- Δυαδική ταξινόμηση με σύντομη εξήγηση (\textlatin{MR})}
+
+\textbf{\textlatin{Prompt:}}
+\selectlanguage{english}
+\begin{verbatim}
+Classify the sentiment of the following movie review as positive or negative.
+Then explain briefly why.
+Text: "throughout all the tumult , a question comes to mind : so why is this
+so boring ?"
+\end{verbatim}
+\selectlanguage{greek}
+
+\textbf{\textlatin{ChatGPT response:}}
+\selectlanguage{english}
+\begin{verbatim}
+negative. The review expresses dissatisfaction and uses strongly negative
+wording, especially the word "boring", which signals a negative opinion
+about the film.
+\end{verbatim}
+\selectlanguage{greek}
+
+\textbf{Σχόλιο:} Η λέξη \textlatin{boring} λειτουργεί ως κυρίαρχη αρνητική ένδειξη και επηρεάζει καθοριστικά την πρόβλεψη.
+
+\textbf{Παράδειγμα 3 -- Τριταξική ταξινόμηση (\textlatin{Semeval 2017})}
+
+\textbf{\textlatin{Prompt:}}
+\selectlanguage{english}
+\begin{verbatim}
+Classify the sentiment of the following tweet as positive, negative, or
+neutral. Answer with one label only.
+Tweet: "Ariana Grande White House Easter Egg Roll in Washington
+https://t.co/jdjL9swWM8 #ArianaGrande"
+\end{verbatim}
+\selectlanguage{greek}
+
+\textbf{\textlatin{ChatGPT response:}}
+\selectlanguage{english}
+\begin{verbatim}
+neutral
+\end{verbatim}
+\selectlanguage{greek}
+
+\textbf{Σχόλιο:} Το \textlatin{tweet} είναι κυρίως πληροφοριακό και δεν περιέχει ξεκάθαρη συναισθηματική στάση, άρα η ουδέτερη κατηγορία είναι η καταλληλότερη.
+
+\textbf{Παράδειγμα 4 -- Αρνητικό \textlatin{tweet} με αιτιολόγηση (\textlatin{Semeval 2017})}
+
+\textbf{\textlatin{Prompt:}}
+\selectlanguage{english}
+\begin{verbatim}
+Classify the overall sentiment of the following tweet as positive, negative,
+or neutral. Then explain which words are the strongest sentiment cues.
+Tweet: "Soros brainwashes & enslaves U #blacklivesmatter protesting fools.
+So naive. U want socialism? Study Venezuela & compare. Morons!"
+\end{verbatim}
+\selectlanguage{greek}
+
+\textbf{\textlatin{ChatGPT response:}}
+\selectlanguage{english}
+\begin{verbatim}
+negative. The overall sentiment is strongly negative. The strongest cues are
+"brainwashes", "enslaves", "fools", "naive", and "morons", all of which
+express hostility and contempt.
+\end{verbatim}
+\selectlanguage{greek}
+
+\textbf{Σχόλιο:} Σε τέτοιες περιπτώσεις, το \textlatin{ChatGPT} μπορεί να εντοπίσει όχι μόνο την κλάση αλλά και τις λέξεις που καθοδηγούν την απόφαση.
+
+\textbf{Παράδειγμα 5 -- Δύσκολη περίπτωση μικτού συναισθήματος (\textlatin{Semeval 2017})}
+
+\textbf{\textlatin{Prompt:}}
+\selectlanguage{english}
+\begin{verbatim}
+Classify the sentiment of the following tweet as positive, negative, or
+neutral. If the tweet is mainly informative or mixed, prefer neutral.
+Tweet: "I hate her but... I love her songs Dammit ._. #ArianaGrande"
+\end{verbatim}
+\selectlanguage{greek}
+
+\textbf{\textlatin{ChatGPT response:}}
+\selectlanguage{english}
+\begin{verbatim}
+neutral
+\end{verbatim}
+\selectlanguage{greek}
+
+\textbf{Σχόλιο:} Το \textlatin{tweet} περιέχει μικτό συναίσθημα, αφού συνδυάζει αρνητική στάση προς το πρόσωπο με θετική στάση προς τα τραγούδια. Τέτοιες περιπτώσεις είναι πιο αμφίσημες και συχνά δυσκολεύουν τόσο τα μοντέλα όσο και την ανθρώπινη επισημείωση.
 
 \paragraph{Επίδοση μοντέλου:}
 
@@ -697,16 +809,43 @@ def eval_dataset(dataloader, model, loss_function):
     \textbf{\textlatin{Dataset}} & \textbf{\textlatin{Accuracy}} & \textbf{\textlatin{F1 (macro)}} & \textbf{\textlatin{Recall (macro)}} \\
     \midrule
     \textlatin{Sentence Polarity} & 0.9750 & 0.9750 & 0.9750 \\
-    \textlatin{Semeval 2017}      & 0.8500 & 0.8461 & 0.8500 \\
+    \textlatin{Semeval 2017}      & 0.8500 & 0.8503 & 0.8500 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{\textlatin{TP/FP/TN/FN} για το \textlatin{ChatGPT} -- \textlatin{Sentence Polarity (MR)}}
+  \begin{tabular}{lcccc}
+    \toprule
+    \textbf{\textlatin{Class}} & \textbf{\textlatin{TP}} & \textbf{\textlatin{FP}} & \textbf{\textlatin{TN}} & \textbf{\textlatin{FN}} \\
+    \midrule
+    \textlatin{positive} & 19 & 0 & 20 & 1 \\
+    \textlatin{negative} & 20 & 1 & 19 & 0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{\textlatin{TP/FP/TN/FN} για το \textlatin{ChatGPT} -- \textlatin{Semeval 2017} (\textlatin{one-vs-rest})}
+  \begin{tabular}{lcccc}
+    \toprule
+    \textbf{\textlatin{Class}} & \textbf{\textlatin{TP}} & \textbf{\textlatin{FP}} & \textbf{\textlatin{TN}} & \textbf{\textlatin{FN}} \\
+    \midrule
+    \textlatin{positive} & 15 & 1 & 39 & 5 \\
+    \textlatin{negative} & 19 & 2 & 38 & 1 \\
+    \textlatin{neutral}  & 17 & 6 & 34 & 3 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \paragraph{Ανάλυση αποτελεσμάτων:}
 
-Στο \textlatin{MR}, το \textlatin{ChatGPT} απέδωσε εξαιρετικά καλά, κάτι που ήταν αναμενόμενο, επειδή οι περισσότερες προτάσεις του συνόλου αυτού είναι σύντομες κριτικές με σχετικά καθαρό και άμεσο συναισθηματικό προσανατολισμό. Λέξεις και φράσεις όπως \textlatin{best}, \textlatin{great}, \textlatin{worth seeing}, \textlatin{ingenious}, \textlatin{tedious}, \textlatin{boring}, \textlatin{fails}, \textlatin{lacking} και \textlatin{dungpile} λειτούργησαν ως ισχυρές ενδείξεις για τη σωστή κατηγορία. Τα λίγα σφάλματα εμφανίστηκαν κυρίως σε παραδείγματα με πιο έμμεσο ή ειρωνικό ύφος, όπου το κείμενο συνδύαζε θετικά και αρνητικά στοιχεία.
+Στο \textlatin{MR}, το \textlatin{ChatGPT} απέδωσε εξαιρετικά καλά, με 39 σωστές προβλέψεις σε σύνολο 40 παραδειγμάτων. Το μοναδικό σφάλμα εμφανίστηκε σε μία θετική πρόταση με πιο έμμεσο και περιγραφικό ύφος, η οποία ερμηνεύθηκε ως αρνητική. Αυτό ήταν αναμενόμενο, επειδή πολλές προτάσεις του συνόλου αυτού είναι σύντομες κριτικές με σχετικά καθαρό και άμεσο συναισθηματικό προσανατολισμό. Λέξεις και φράσεις όπως \textlatin{best}, \textlatin{great}, \textlatin{worth seeing}, \textlatin{ingenious}, \textlatin{tedious}, \textlatin{boring}, \textlatin{fails}, \textlatin{lacking} και \textlatin{dungpile} λειτούργησαν ως ισχυρές ενδείξεις για τη σωστή κατηγορία.
 
-Στο \textlatin{Semeval 2017}, η επίδοση ήταν χαμηλότερη, κυρίως επειδή τα \textlatin{tweets} είναι πιο θορυβώδη, πιο σύντομα και συχνά αμφίσημα. Σε αρκετές περιπτώσεις το \textlatin{ChatGPT} μπέρδεψε το συνολικό συναίσθημα του \textlatin{tweet} με το συναίσθημα απέναντι στο θέμα ή στο \textlatin{hashtag}. Επίσης, ορισμένα \textlatin{tweets} είχαν καθαρά πληροφοριακό χαρακτήρα αλλά περιείχαν λέξεις ή \textlatin{emojis} που έδιναν την εντύπωση θετικής ή αρνητικής στάσης, οδηγώντας σε σύγχυση ανάμεσα στις κλάσεις \textlatin{neutral} και \textlatin{positive/negative}. Σημαντικά λεκτικά στοιχεία για τις προβλέψεις ήταν λέξεις όπως \textlatin{love}, \textlatin{justice}, \textlatin{great}, \textlatin{funny}, \textlatin{disgraceful}, \textlatin{terrorist}, \textlatin{hate}, αλλά και δείκτες όπως τα \textlatin{hashtags}, τα \textlatin{emojis} και η παρουσία προστακτικής ή σαρκασμού.
+Στο \textlatin{Semeval 2017}, η επίδοση ήταν χαμηλότερη, με 51 σωστές προβλέψεις σε σύνολο 60 \textlatin{tweets}. Τα περισσότερα λάθη προήλθαν από τη σύγχυση ανάμεσα στις κλάσεις \textlatin{positive} και \textlatin{neutral}, καθώς και ανάμεσα στις \textlatin{neutral} και \textlatin{negative}. Αυτό φαίνεται και από τους πίνακες \textlatin{TP/FP/TN/FN}: η κλάση \textlatin{negative} είχε την καλύτερη επίδοση, ενώ η \textlatin{neutral} ήταν η δυσκολότερη. Ο κύριος λόγος είναι ότι τα \textlatin{tweets} είναι πιο θορυβώδη, πιο σύντομα και συχνά αμφίσημα. Σε αρκετές περιπτώσεις το \textlatin{ChatGPT} μπέρδεψε το συνολικό συναίσθημα του \textlatin{tweet} με το συναίσθημα απέναντι στο θέμα ή στο \textlatin{hashtag}. Επίσης, ορισμένα \textlatin{tweets} είχαν καθαρά πληροφοριακό χαρακτήρα αλλά περιείχαν λέξεις ή \textlatin{emojis} που έδιναν την εντύπωση θετικής ή αρνητικής στάσης, οδηγώντας σε σύγχυση ανάμεσα στις κλάσεις \textlatin{neutral} και \textlatin{positive/negative}. Σημαντικά λεκτικά στοιχεία για τις προβλέψεις ήταν λέξεις όπως \textlatin{love}, \textlatin{justice}, \textlatin{great}, \textlatin{funny}, \textlatin{disgraceful}, \textlatin{terrorist}, \textlatin{hate}, αλλά και δείκτες όπως τα \textlatin{hashtags}, τα \textlatin{emojis} και η παρουσία προστακτικής ή σαρκασμού.
 
 Συνολικά, το \textlatin{ChatGPT} έδειξε πολύ καλή ικανότητα αναγνώρισης συναισθήματος σε πιο καθαρά και άμεσα κείμενα, αλλά μεγαλύτερη δυσκολία σε περιπτώσεις ειρωνείας, μικτού συναισθήματος ή ουδέτερων αναρτήσεων με έντονα επιφανειακά λεκτικά σήματα. Αυτό επιβεβαιώνει ότι ορισμένες λέξεις είναι ιδιαίτερα σημαντικές για την απόφαση του μοντέλου, αλλά η τελική ερμηνεία εξαρτάται συχνά και από το ύφος, το συγκείμενο και τη συνολική πρόθεση του κειμένου.
 
